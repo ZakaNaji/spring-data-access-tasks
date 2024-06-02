@@ -15,8 +15,10 @@ public class VehicleDaoCmdRunner implements CommandLineRunner {
     private final VehicleDao vehicleDao;
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("start inserting vehicle...");
-        vehicleDao.insert(new Vehicle("TEM0001", "Red", 4, 4));
-        System.out.printf("Vehicle inserted: %s%n", vehicleDao.findByVehicleNo("TEM0001"));
+        System.out.println("test update");
+        var vehicle = vehicleDao.findByVehicleNo("TEM0001");
+        vehicle.setColor("Blue");
+        vehicleDao.update(vehicle);
+        System.out.printf("Vehicle updated: %s%n", vehicleDao.findByVehicleNo("TEM0001"));
     }
 }

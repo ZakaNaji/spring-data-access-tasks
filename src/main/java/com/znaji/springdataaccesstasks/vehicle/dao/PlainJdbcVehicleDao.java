@@ -2,7 +2,7 @@ package com.znaji.springdataaccesstasks.vehicle.dao;
 
 import com.znaji.springdataaccesstasks.vehicle.model.Vehicle;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -34,13 +34,13 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
 
     @Override
-    public void update(Vehicle vehicle) {
-        try (var con = dataSource.getConnection(); var ps = con.prepareStatement(UPDATE_SQL)) {
+    public void update(final Vehicle vehicle) {
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.update(con -> {
+            var ps = con.prepareStatement(UPDATE_SQL);
             prepareStatement(vehicle, ps);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+            return ps;
+        });
     }
 
     @Override
