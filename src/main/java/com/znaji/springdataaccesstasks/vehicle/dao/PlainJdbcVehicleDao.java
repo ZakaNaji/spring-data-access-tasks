@@ -24,12 +24,8 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public void insert(Vehicle vehicle) {
-        try (var con = dataSource.getConnection(); var ps = con.prepareStatement(INSERT_SQL)) {
-            prepareStatement(vehicle, ps);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.update(INSERT_SQL, ps -> prepareStatement(vehicle, ps));
     }
 
 
