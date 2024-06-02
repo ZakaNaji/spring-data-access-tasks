@@ -66,16 +66,8 @@ public class PlainJdbcVehicleDao implements VehicleDao {
     @Override
     public List<Vehicle> findAll() {
         var jdbcTemplate = new JdbcTemplate(dataSource);
-        return jdbcTemplate.queryForList(SELECT_ALL_SQL)
-                .stream()
-                .map(row -> {
-                    var vehicle = new Vehicle();
-                    vehicle.setVehicleNo((String) row.get("VEHICLE_NO"));
-                    vehicle.setColor((String) row.get("COLOR"));
-                    vehicle.setWheel((Integer) row.get("WHEEL"));
-                    vehicle.setSeat((Integer) row.get("SEAT"));
-                    return vehicle;
-                }).toList();
+        var mapper = BeanPropertyRowMapper.newInstance(Vehicle.class);
+        return jdbcTemplate.query(SELECT_ALL_SQL, mapper);
     }
 
     @Override
