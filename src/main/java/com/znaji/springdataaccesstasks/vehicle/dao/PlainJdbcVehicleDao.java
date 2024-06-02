@@ -2,6 +2,7 @@ package com.znaji.springdataaccesstasks.vehicle.dao;
 
 import com.znaji.springdataaccesstasks.vehicle.model.Vehicle;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -49,15 +50,8 @@ public class PlainJdbcVehicleDao implements VehicleDao {
     @Override
     public Vehicle findByVehicleNo(String vehicleNo) {
         var jdbcTemplate = new JdbcTemplate(dataSource);
-        var vehicle = new Vehicle();
-        jdbcTemplate.query(SELECT_ONE_SQL,
-                rs -> {
-                    vehicle.setVehicleNo(rs.getString("VEHICLE_NO"));
-                    vehicle.setColor(rs.getString("COLOR"));
-                    vehicle.setWheel(rs.getInt("WHEEL"));
-                    vehicle.setSeat(rs.getInt("SEAT"));
-                }, vehicleNo);
-        return vehicle;
+        var mapper = BeanPropertyRowMapper.newInstance(Vehicle.class);
+        return jdbcTemplate.queryForObject(SELECT_ONE_SQL, mapper, vehicleNo);
     }
 
     private Vehicle toVehicle(ResultSet rs) throws SQLException {
