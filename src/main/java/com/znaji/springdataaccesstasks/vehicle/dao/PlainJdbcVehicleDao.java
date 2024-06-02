@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -83,6 +84,12 @@ public class PlainJdbcVehicleDao implements VehicleDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void insert(Collection<Vehicle> vehicles) {
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.batchUpdate(INSERT_SQL, vehicles, vehicles.size(), (ps, vehicle) -> prepareStatement(vehicle, ps));
     }
 
     private void prepareStatement(Vehicle vehicle, PreparedStatement ps) throws SQLException {
