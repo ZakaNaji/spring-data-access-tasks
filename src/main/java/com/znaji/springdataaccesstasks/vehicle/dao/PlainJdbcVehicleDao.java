@@ -48,18 +48,16 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public Vehicle findByVehicleNo(String vehicleNo) {
-        try (var con = dataSource.getConnection(); var ps = con.prepareStatement(SELECT_ONE_SQL)) {
-            ps.setString(1, vehicleNo);
-            Vehicle vehicle = null;
-            try (var rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    vehicle = toVehicle(rs);
-                }
-            }
-            return vehicle;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        var vehicle = new Vehicle();
+        jdbcTemplate.query(SELECT_ONE_SQL,
+                rs -> {
+                    vehicle.setVehicleNo(rs.getString("VEHICLE_NO"));
+                    vehicle.setColor(rs.getString("COLOR"));
+                    vehicle.setWheel(rs.getInt("WHEEL"));
+                    vehicle.setSeat(rs.getInt("SEAT"));
+                }, vehicleNo);
+        return vehicle;
     }
 
     private Vehicle toVehicle(ResultSet rs) throws SQLException {
