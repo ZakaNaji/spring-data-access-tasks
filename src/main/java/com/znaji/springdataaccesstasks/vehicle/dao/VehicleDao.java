@@ -15,4 +15,12 @@ public interface VehicleDao {
     default void insert(Collection<Vehicle> vehicles) {
         vehicles.forEach(this::insert);
     }
+
+    default String getColor(String vehicleNo) {
+        throw new IllegalStateException("Method is not implemented!");
+    }
+
+    default int countAll() {
+        throw new IllegalStateException("Method is not implemented!");
+    }
 }

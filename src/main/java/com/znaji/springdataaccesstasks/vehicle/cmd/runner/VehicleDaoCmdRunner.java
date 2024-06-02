@@ -15,10 +15,9 @@ import java.util.List;
 public class VehicleDaoCmdRunner implements CommandLineRunner {
 
     private final VehicleDao vehicleDao;
+
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("test find all");
-        List<Vehicle> vehicles = vehicleDao.findAll();
-        vehicles.forEach(System.out::println);
+        System.out.printf("Vehicle color for vehicle no %s is %s%n", "CAR01", vehicleDao.getColor("CAR01"));
     }
 }

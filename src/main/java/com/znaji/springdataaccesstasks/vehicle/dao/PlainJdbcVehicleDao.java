@@ -24,6 +24,9 @@ public class PlainJdbcVehicleDao implements VehicleDao {
     private static final String SELECT_ONE_SQL = "SELECT * FROM VEHICLE WHERE VEHICLE_NO = ?";
     private static final String DELETE_SQL = "DELETE FROM VEHICLE WHERE VEHICLE_NO=?";
 
+    private static final String COUNT_ALL_SQL = "SELECT COUNT(*) FROM VEHICLE";
+    private static final String SELECT_COLOR_SQL = "SELECT COLOR FROM VEHICLE WHERE VEHICLE_NO=?";
+
     @Override
     public void insert(Vehicle vehicle) {
         var jdbcTemplate = new JdbcTemplate(dataSource);
@@ -74,6 +77,18 @@ public class PlainJdbcVehicleDao implements VehicleDao {
     public void insert(Collection<Vehicle> vehicles) {
         var jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.batchUpdate(INSERT_SQL, vehicles, vehicles.size(), (ps, vehicle) -> prepareStatement(vehicle, ps));
+    }
+
+    @Override
+    public String getColor(String vehicleNo) {
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.queryForObject(SELECT_COLOR_SQL, String.class, vehicleNo);
+    }
+
+    @Override
+    public int countAll() {
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.queryForObject(COUNT_ALL_SQL, Integer.class);
     }
 
     private void prepareStatement(Vehicle vehicle, PreparedStatement ps) throws SQLException {
