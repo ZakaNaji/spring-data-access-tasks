@@ -41,12 +41,8 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public void delete(Vehicle vehicle) {
-        try (var con = dataSource.getConnection(); var ps = con.prepareStatement(DELETE_SQL)) {
-            ps.setString(1, vehicle.getVehicleNo());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        var jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.update(DELETE_SQL, vehicle.getVehicleNo());
     }
 
     @Override
