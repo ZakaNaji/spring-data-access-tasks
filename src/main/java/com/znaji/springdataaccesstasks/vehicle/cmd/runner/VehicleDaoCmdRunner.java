@@ -17,8 +17,8 @@ public class VehicleDaoCmdRunner implements CommandLineRunner {
     private final VehicleDao vehicleDao;
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("test find one by vehicle no");
-        var vehicle = vehicleDao.findByVehicleNo("CAR2");
-        System.out.println(vehicle);
+        System.out.println("test find all");
+        List<Vehicle> vehicles = vehicleDao.findAll();
+        vehicles.forEach(System.out::println);
     }
 }
