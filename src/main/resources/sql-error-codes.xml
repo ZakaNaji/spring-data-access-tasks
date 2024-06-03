@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="PostgreSQL"
+          class="org.springframework.jdbc.support.SQLErrorCodes">
+        <property name="useSqlStateForTranslation">
+            <value>true</value>
+        </property>
+        <property name="customTranslations">
+            <list>
+                <ref bean="myDuplicateKeyTranslation" />
+            </list>
+        </property>
+    </bean>
+    <bean id="myDuplicateKeyTranslation"
+          class="org.springframework.jdbc.support.CustomSQLErrorCodesTranslation">
+        <property name="errorCodes">
+            <value>23505</value>
+        </property>
+        <property name="exceptionClass">
+            <value>
+                com.znaji.springdataaccesstasks.vehicle.exception.MyDuplicateKeyException
+            </value>
+        </property>
+    </bean>
+</beans>

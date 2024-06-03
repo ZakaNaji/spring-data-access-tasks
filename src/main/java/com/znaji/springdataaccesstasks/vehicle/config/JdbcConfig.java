@@ -3,12 +3,15 @@ package com.znaji.springdataaccesstasks.vehicle.config;
 import com.zaxxer.hikari.HikariDataSource;
 import com.znaji.springdataaccesstasks.vehicle.dao.PlainJdbcVehicleDao;
 import com.znaji.springdataaccesstasks.vehicle.dao.VehicleDao;
+import com.znaji.springdataaccesstasks.vehicle.exception.MyDuplicateKeyException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 import org.postgresql.Driver;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.CustomSQLErrorCodesTranslation;
+import org.springframework.jdbc.support.SQLErrorCodes;
 
 @Configuration
 public class JdbcConfig {
