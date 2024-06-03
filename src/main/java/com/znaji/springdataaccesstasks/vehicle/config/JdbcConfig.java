@@ -8,12 +8,18 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 import org.postgresql.Driver;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
 public class JdbcConfig {
     @Bean
-    public VehicleDao vehicleDao(DataSource dataSource) {
-        return new PlainJdbcVehicleDao(dataSource);
+    public VehicleDao vehicleDao(JdbcTemplate jdbcTemplate) {
+        return new PlainJdbcVehicleDao(jdbcTemplate);
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean

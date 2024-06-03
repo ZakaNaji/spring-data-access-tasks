@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PlainJdbcVehicleDao implements VehicleDao {
 
-    private final DataSource dataSource;
+    private final JdbcTemplate jdbcTemplate;
 
     private static final String INSERT_SQL = "INSERT INTO VEHICLE (COLOR, WHEEL, SEAT,VEHICLE_NO) VALUES (?, ?, ?, ?)";
     private static final String UPDATE_SQL = "UPDATE VEHICLE SET COLOR=?,WHEEL=?,SEAT=? WHERE VEHICLE_NO=?";
@@ -29,14 +29,12 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public void insert(Vehicle vehicle) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(INSERT_SQL, ps -> prepareStatement(vehicle, ps));
     }
 
 
     @Override
     public void update(final Vehicle vehicle) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(con -> {
             var ps = con.prepareStatement(UPDATE_SQL);
             prepareStatement(vehicle, ps);
@@ -46,13 +44,11 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public void delete(Vehicle vehicle) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.update(DELETE_SQL, vehicle.getVehicleNo());
     }
 
     @Override
     public Vehicle findByVehicleNo(String vehicleNo) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         var mapper = BeanPropertyRowMapper.newInstance(Vehicle.class);
         return jdbcTemplate.queryForObject(SELECT_ONE_SQL, mapper, vehicleNo);
     }
@@ -68,26 +64,22 @@ public class PlainJdbcVehicleDao implements VehicleDao {
 
     @Override
     public List<Vehicle> findAll() {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         var mapper = BeanPropertyRowMapper.newInstance(Vehicle.class);
         return jdbcTemplate.query(SELECT_ALL_SQL, mapper);
     }
 
     @Override
     public void insert(Collection<Vehicle> vehicles) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.batchUpdate(INSERT_SQL, vehicles, vehicles.size(), (ps, vehicle) -> prepareStatement(vehicle, ps));
     }
 
     @Override
     public String getColor(String vehicleNo) {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.queryForObject(SELECT_COLOR_SQL, String.class, vehicleNo);
     }
 
     @Override
     public int countAll() {
-        var jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.queryForObject(COUNT_ALL_SQL, Integer.class);
     }
 

@@ -18,6 +18,8 @@ public class VehicleDaoCmdRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.printf("Vehicle color for vehicle no %s is %s%n", "CAR01", vehicleDao.getColor("CAR01"));
+        System.out.println("findAll() method");
+        List<Vehicle> vehicles = vehicleDao.findAll();
+        vehicles.forEach(System.out::println);
     }
 }
