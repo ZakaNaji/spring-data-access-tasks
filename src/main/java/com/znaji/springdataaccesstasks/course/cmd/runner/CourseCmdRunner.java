@@ -17,13 +17,10 @@ public class CourseCmdRunner implements CommandLineRunner {
     private final CourseDao courseDao;
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("test insert using JPA");
-        var course = Course.builder()
-                .title("Java")
-                .beginDate(LocalDate.now())
-                .endDate(LocalDate.now().plusMonths(3))
-                .fee(1000)
-                .build();
-        courseDao.store(course);
+        System.out.println("test rest of jpa methods");
+        var courses = courseDao.findAll();
+        courses.forEach(System.out::println);
+        courseDao.delete(3L);
+        courses.forEach(System.out::println);
     }
 }

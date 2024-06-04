@@ -35,16 +35,34 @@ public class JpaCourseDao implements CourseDao{
 
     @Override
     public void delete(Long courseId) {
-
+        var em = entityManagerFactory.createEntityManager();
+        var tx = em.getTransaction();
+        try (em) {
+            tx.begin();
+            var course = em.find(Course.class, courseId);
+            if (course != null) {
+                em.remove(course);
+            }
+            tx.commit();
+        } catch (RuntimeException e) {
+            tx.rollback();
+            throw e;
+        }
     }
 
     @Override
     public Course findById(Long courseId) {
-        return null;
+        var em = entityManagerFactory.createEntityManager();
+        try (em) {
+            return em.find(Course.class, courseId);
+        }
     }
 
     @Override
     public List<Course> findAll() {
-        return null;
+        var em = entityManagerFactory.createEntityManager();
+        try (em) {
+            return em.createQuery("select c from Course c", Course.class).getResultList();
+        }
     }
 }
