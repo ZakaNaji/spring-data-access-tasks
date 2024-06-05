@@ -17,10 +17,9 @@ public class CourseCmdRunner implements CommandLineRunner {
     private final CourseDao courseDao;
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("test rest of jpa methods");
+        System.out.println("test rest of Hibernate methods");
         var courses = courseDao.findAll();
         courses.forEach(System.out::println);
-        courseDao.delete(3L);
-        courses.forEach(System.out::println);
+
     }
 }
