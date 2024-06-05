@@ -1,6 +1,7 @@
 package com.znaji.springdataaccesstasks.course.config;
 
 import com.znaji.springdataaccesstasks.course.entity.Course;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -22,6 +24,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableTransactionManagement
+
 public class CourseConfig {
 
     private final Environment environment;
@@ -47,6 +50,7 @@ public class CourseConfig {
     }
 
     @Bean
+    @Profile("hibernate")
     public PlatformTransactionManager transactionManager(SessionFactory sessionFactory, DataSource dataSource) {
         var transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory);
@@ -59,12 +63,18 @@ public class CourseConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         var entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("com.znaji.springdataaccesstasks.course.entity");
+        entityManagerFactoryBean.setPackagesToScan("com.znaji.springdataaccesstasks.course");
 
         var jpaProvider = new HibernateJpaVendorAdapter();
         entityManagerFactoryBean.setJpaVendorAdapter(jpaProvider);
         entityManagerFactoryBean.setJpaProperties(jpaProperties());
         return entityManagerFactoryBean;
+    }
+
+    @Bean
+    @Profile("jpa")
+    public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 
     private Properties jpaProperties() {

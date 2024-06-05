@@ -18,6 +18,7 @@ public class CourseCmdRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("test rest of Hibernate methods");
+        courseDao.store(Course.builder().title("Java for Dummies").beginDate(LocalDate.now()).endDate(LocalDate.now().plusMonths(3)).fee(1000).build());
         var courses = courseDao.findAll();
         courses.forEach(System.out::println);
 
