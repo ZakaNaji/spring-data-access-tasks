@@ -1,6 +1,7 @@
 package com.znaji.springdataaccesstasks.course.cmd.runner;
 
 import com.znaji.springdataaccesstasks.course.dao.CourseDao;
+import com.znaji.springdataaccesstasks.course.dao.CourseRepository;
 import com.znaji.springdataaccesstasks.course.entity.Course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,12 +15,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseCmdRunner implements CommandLineRunner {
 
-    private final CourseDao courseDao;
+    private final CourseRepository courseRepository;
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("test rest of Hibernate methods");
-        courseDao.store(Course.builder().title("Java for Dummies").beginDate(LocalDate.now()).endDate(LocalDate.now().plusMonths(3)).fee(1000).build());
-        var courses = courseDao.findAll();
+        System.out.println("test course repository");
+        courseRepository.save(Course.builder().title("Spring Data JPA").beginDate(LocalDate.now()).endDate(LocalDate.now().plusMonths(3)).fee(1000).build());
+        var courses = courseRepository.findAll();
         courses.forEach(System.out::println);
 
     }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -24,7 +25,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableTransactionManagement
-
+@EnableJpaRepositories(basePackages = "com.znaji.springdataaccesstasks.course.dao")
 public class CourseConfig {
 
     private final Environment environment;
@@ -71,7 +72,7 @@ public class CourseConfig {
         return entityManagerFactoryBean;
     }
 
-    @Bean
+    @Bean(name = "transactionManager")
     @Profile("jpa")
     public JpaTransactionManager jpaTransactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
